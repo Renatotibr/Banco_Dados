@@ -1,0 +1,31 @@
+CREATE TABLE #DelTest (ID INT IDENTITY, name NVARCHAR(128)); -- Build the test table
+INSERT INTO #DelTest (name) SELECT name FROM sys.objects;  -- fill from system DB
+SELECT COUNT(*) TableNamesContainingSys FROM #deltest WHERE name LIKE '%sys%'; -- check rowcount
+go
+DECLARE @HowMany INT;
+DECLARE @RowsTouched INT;
+DECLARE @TotalRowCount INT;
+DECLARE @msg VARCHAR(100);
+DECLARE @starttime DATETIME 
+DECLARE @currenttime DATETIME 
+
+SET @RowsTouched = 1; -- Needs to be >0 for loop to start
+SET @TotalRowCount=0  -- Total rows deleted so far is 0
+SET @HowMany = 5;     -- Variable to choose how many rows to delete per loop
+SET @starttime=GETDATE()
+
+WHILE @RowsTouched > 0
+BEGIN
+   DELETE TOP (@HowMany)
+   FROM #DelTest 
+   WHERE name LIKE '%sys%';
+
+   SET @RowsTouched = @@ROWCOUNT; -- Rows deleted this loop
+   SET @TotalRowCount = @TotalRowCount+@RowsTouched; -- Increment Total rows deleted count
+   SET @currenttime = GETDATE();
+   SELECT @msg='Deleted ' + CONVERT(VARCHAR(9),@TotalRowCount) + ' Records. Runtime so far is '+CONVERT(VARCHAR(30),DATEDIFF(MILLISECOND,@starttime,@currenttime))+' milliseconds.'
+   RAISERROR(@msg, 0, 1) WITH NOWAIT;  -- Print message after every loop. Can't use the PRINT function as SQL buffers output in loops.  
+
+END; 
+SELECT COUNT(*) TableNamesContainingSys FROM #DelTest WHERE name LIKE '%sys%'; -- Check row count after loop finish
+DROP TABLE #DelTest;

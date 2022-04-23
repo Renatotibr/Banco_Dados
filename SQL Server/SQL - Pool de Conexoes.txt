@@ -1,0 +1,54 @@
+https://www.dirceuresende.com/blog/erro-de-login-failed-for-user-ao-tentar-conectar-no-sql-server-por-uma-aplicacao-net-csharp/
+
+
+select @@MAX_CONNECTIONS
+
+SELECT 
+    original_login_name,
+    [host_name],
+    client_interface_name,
+    COUNT(*)
+FROM 
+    sys.dm_exec_sessions
+GROUP BY
+    original_login_name,
+    [host_name],
+    client_interface_name
+ORDER BY
+    1, 2, 3
+ 
+ 
+SELECT
+    B.login_name,
+    B.[host_name],
+    B.[program_name],
+    DB_NAME(B.database_id) AS [database],
+    COUNT(*) AS connections
+FROM
+    sys.dm_exec_connections             A
+    LEFT JOIN sys.dm_exec_sessions      B   ON  A.session_id = B.session_id
+GROUP BY
+    B.login_name,
+    B.[host_name],
+    B.[program_name],
+    DB_NAME(B.database_id)
+ 
+ 
+-- Apenas SQL Server 2014 em diante
+SELECT
+    DB_NAME(A.database_id) AS [database],
+    A.is_user_process,
+    COUNT(A.session_id) AS connections
+FROM
+    sys.dm_exec_sessions A
+GROUP BY
+    DB_NAME(A.database_id),
+    A.is_user_process
+ORDER BY
+    1,
+    2
+ 
+ 
+SELECT *
+FROM sys.dm_os_performance_counters A
+WHERE A.counter_name = 'User Connections'

@@ -1,0 +1,11 @@
+$EmailFrom = "EquipeDBA@mg.senac.br"
+$EmailTo = "renato.barbosa@mg.senac.br"
+$Port = 25
+$Subject = "Test From PowerShell (Anonymous Auth, no SSL)"
+$Body = "Did this work?"
+$SMTPServer = "relay"
+
+$SMTPClient = New-Object Net.Mail.SmtpClient($SmtpServer, $Port)
+$SMTPClient.EnableSsl = $false
+$SMTPClient.Credentials = New-Object System.Net.NetworkCredential($EmailFrom, $EmailPass);
+$SMTPClient.Send($EmailFrom, $EmailTo, $Subject, $Body) 

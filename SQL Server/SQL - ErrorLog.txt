@@ -1,0 +1,19 @@
+https://imasters.com.br/banco-de-dados/consultando-o-log-de-erro-do-sql-server-usando-t-sql-2
+
+--Consulta
+exec sp_enumerrorlogs
+
+--Limpeza
+DBCC ERRORLOG
+
+
+https://imasters.com.br/banco-de-dados/consultando-o-log-de-erro-do-sql-server-usando-t-sql-2
+
+
+Sp_readerrorlog
+Xp_readerrorlog
+
+
+
+--DBCC ERRORLOG
+Exec sp_cycle_errorlog;

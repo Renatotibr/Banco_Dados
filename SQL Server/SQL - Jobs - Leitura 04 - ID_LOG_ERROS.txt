@@ -1,0 +1,3 @@
+select * from msdb.dbo.sysjobs where CONVERT(binary(16), job_id)=0x97FCDA526807944288FD7A65424487A8
+
+select * from msdb.dbo.sysjobs where job_id = Cast(Convert(binary(16), '0x97FCDA526807944288FD7A65424487A8', 1) as uniqueidentifier)

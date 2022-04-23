@@ -1,0 +1,40 @@
+select usecounts ,cacheobjtype,objtype , TEXT, query_plan,cp.bucketid, plan_handle
+from sys.dm_exec_cached_plans cp
+CROSS APPLY SYS.dm_exec_sql_text(plan_handle) sqlT
+CROSS APPLY sys.dm_exec_query_plan(plan_handle)qp
+where TEXT LIKE '%FBOLETO%'
+
+
+DBCC FREEPROCCACHE (0x06000B0083AD5A0DE0082944E301000001000000000000000000000000000000000000000000000000000000)
+
+
+
+--Mostra consumo
+-- Run each of these queries once
+DECLARE @Username varchar = 'A'
+SELECT UserName 
+FROM IndexDemos.dbo.[User] 
+WHERE UserName like @Username+'%';
+GO
+
+DECLARE @Username varchar = 'B'
+SELECT UserName 
+FROM IndexDemos.dbo.[User] 
+WHERE UserName like @Username+'%';
+GO
+
+SELECT 
+    cp.cacheobjtype,
+    cp.objtype,
+    cp.plan_handle,
+    cp.size_in_bytes,
+    qp.query_plan,
+    st.text
+FROM
+    sys.dm_exec_cached_plans cp
+    CROSS APPLY sys.dm_exec_query_plan(cp.plan_handle) qp
+    INNER JOIN sys.dm_exec_query_stats qs
+        ON cp.plan_handle = qs.plan_handle
+    CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) st
+WHERE 
+    st.text like 'DECLARE @Username varchar =%';

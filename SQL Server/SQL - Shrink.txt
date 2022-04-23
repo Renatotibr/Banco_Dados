@@ -1,0 +1,25 @@
+https://dba.stackexchange.com/questions/107792/how-can-i-reduce-the-initial-size-of-a-log-file
+
+
+ALTER DATABASE [CORPORE_GAO] 
+SET RECOVERY SIMPLE;
+
+sp_helpdb CORPORE_GAO --get logical log file name
+
+CHECKPOINT;
+
+DBCC SHRINKFILE (Corpore_Log,0);
+
+ALTER DATABASE [CORPORE_GAO]
+MODIFY FILE (name=Corpore_Log,SIZE=240MB,MAXSIZE=UNLIMITED,FILEGROWTH=100MB);--dummy values change accordingly
+
+------------------------
+
+   use CORPORE_GAO
+    Go
+    alter database CORPORE_GAO set single_user with rollback immediate 
+    Go
+    DBCC SHRINKFILE (N'Corpore_Log',240)
+    Go
+    alter database CORPORE_GAO set multi_user with rollback immediate
+    Go

@@ -1,0 +1,35 @@
+--Contenção de Tempdb, como resolver?
+https://www.tiagoneves.net/blog/contencao-de-tempdb-como-resolver/
+
+--Redução
+https://www.sqlshack.com/overview-of-the-shrink-tempdb-database-in-sql-server/
+
+--Redução e Move
+https://www.databasejournal.com/tips/how-to-resize-tempdb.html
+https://www.sqlshack.com/overview-of-the-shrink-tempdb-database-in-sql-server/
+
+
+   ALTER DATABASE tempdb MODIFY FILE
+   (NAME = 'tempdev', SIZE = target_size_in_MB) 
+   --Desired target size for the data file
+
+   ALTER DATABASE tempdb MODIFY FILE
+   (NAME = 'templog', SIZE = target_size_in_MB)
+   --Desired target size for the log file
+
+
+/***************************************************************/
+
+   use tempdb
+   go
+
+   dbcc shrinkfile (tempdev, 'target size in MB')
+   go
+   -- this command shrinks the primary data file
+
+   dbcc shrinkfile (templog, 'target size in MB')
+   go
+   -- this command shrinks the log file, examine the last paragraph.
+
+--Deu ruim 
+https://support.microsoft.com/pt-br/topic/como-reduzir-o-banco-de-dados-tempdb-no-sql-server-ea0a95c2-eff8-7075-9ee2-2ee42226ca1c

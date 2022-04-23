@@ -1,0 +1,47 @@
+/****** Script for SelectTopNRows command from SSMS  ******/
+SELECT TOP (1000) [Id_Alert_Parameter]
+      ,[Nm_Alert]
+      ,[Nm_Procedure]
+      ,[Frequency_Minutes]
+      ,[Hour_Start_Execution]
+      ,[Hour_End_Execution]
+      ,[Fl_Language]
+      ,[Fl_Clear]
+      ,[Fl_Enable]
+      ,[Vl_Parameter]
+      ,[Ds_Metric]
+      ,[Vl_Parameter_2]
+      ,[Ds_Metric_2]
+      ,[Ds_Profile_Email]
+      ,[Ds_Email]
+      ,[Ds_Message_Alert_ENG]
+      ,[Ds_Message_Clear_ENG]
+      ,[Ds_Message_Alert_PTB]
+      ,[Ds_Message_Clear_PTB]
+      ,[Ds_Email_Information_1_ENG]
+      ,[Ds_Email_Information_2_ENG]
+      ,[Ds_Email_Information_1_PTB]
+      ,[Ds_Email_Information_2_PTB]
+  FROM [Traces].[dbo].[Alert_Parameter] where nm_alert like '%erro%'
+  
+  --where nm_alert like '%CPU%'
+
+
+update Alert_Parameter set Fl_Enable = 0 where Nm_Alert in (
+'Database Without Backup', 
+'Slow File Growth', 
+'Long Running Process', 
+'CPU Utilization MI', 
+'Large LDF File', 
+'CPU Utilization',
+'Log Full',
+'SQL Server Connection',
+'Alert Without Clear',
+'Job Disabled', 
+'Process Executing')
+ 
+ 
+
+EXEC dbo.stpAlert_Every_Day
+
+EXEC dbo.stpTest_Alerts

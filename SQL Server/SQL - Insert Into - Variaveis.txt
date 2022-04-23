@@ -1,0 +1,10 @@
+/*declare @tab TABLE (cliente varchar(10), qtde_pedidos int)
+insert into @tab
+   select customerId, qtde_pedidos=count(*)
+   from orders
+   where customerId like ('v%')
+   group by customerId
+select * from @tab
+update @tab set qtde_pedidos = qtde_pedidos + 1
+delete from @tab
+*/

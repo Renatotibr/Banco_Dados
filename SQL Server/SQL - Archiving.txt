@@ -1,0 +1,21 @@
+https://stackoverflow.com/questions/24732993/sql-server-2012-copy-old-data-from-production-to-archive-db-each-month
+
+insert into *destinationArchiveDB*
+    select * 
+    from *sourceProductionDB*
+    where *your archive condition*
+For example:
+
+insert into TRC_ARC.dbo.Table1
+    select * 
+    from TRC.dbo.Table1
+    where ProductionDate = 'yyyy-mm-dd'
+
+********
+
+https://stackoverflow.com/questions/6052881/archiving-large-amounts-of-old-data-in-sql-server
+
+SELECT * INTO ANewArchiveTable
+FROM CurrentTable
+WHERE SomeDateColumn <= DATEADD(year, -2, GETDATE())
+

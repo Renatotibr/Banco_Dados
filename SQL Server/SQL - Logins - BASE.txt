@@ -1,0 +1,25 @@
+-- Somente da Base de Dados selecionada
+SELECT 
+	susers.[name] AS LogInAtServerLevel,
+	users.[name] AS UserAtDBLevel,
+	DB_NAME() AS [Database],              
+	roles.name AS DatabaseRoleMembership
+ from sys.database_principals users
+  inner join sys.database_role_members link
+   on link.member_principal_id = users.principal_id
+  inner join sys.database_principals roles
+   on roles.principal_id = link.role_principal_id
+   inner join sys.server_principals susers
+   on susers.sid = users.sid order by LogInAtServerLevel
+
+-- Verificando as permissões do usuário
+EXEC NomedaBase.dbo.sp_helprotect
+
+
+--Cria script de usuários
+https://www.ti-enxame.com/pt/sql-server/como-voce-pode-salvar-todas-funcoes-definidas-pelo-usuario-em-arquivos-txt-em-seu-disco-rigido-local/l956659241/
+
+
+--Exporta Logins
+https://docs.microsoft.com/pt-br/troubleshoot/sql/security/transfer-logins-passwords-between-instances
+

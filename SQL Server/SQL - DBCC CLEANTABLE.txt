@@ -1,0 +1,2 @@
+https://devio.wordpress.com/2013/09/27/shrinking-ms-sql-server-tables/
+https://social.msdn.microsoft.com/Forums/sqlserver/en-US/68af32bb-eefa-494a-b62d-1ebd1387d105/how-to-reduce-size-of-sql-server-table

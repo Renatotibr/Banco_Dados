@@ -1,0 +1,12 @@
+https://dbasqlserverbr.com.br/top-10-scripts-de-indices-que-todos-dbas-precisam-saber-sql-server/
+
+
+--SORT_IN_TEMPDB = OFF
+
+/*
+USE AdventureWorks2017 
+
+GO
+
+ALTER INDEX [IX_Address_StateProvinceID] ON [Person].[Address] REBUILD PARTITION = ALL WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+*/

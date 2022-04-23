@@ -1,0 +1,4 @@
+select top 100 DESC_CHAMADO, OPCOES_SERVICOS, * from f_servicos_ti where DESC_CHAMADO like '%gb%'
+and DESC_ATIVIDADE like '%GIOVANNI RIBEIRO DO AMARAL%'
+And COD_ETAPA_F = 1
+And OPCOES_SERVICOS like '%servidor%'

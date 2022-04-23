@@ -1,0 +1,11 @@
+https://docs.microsoft.com/pt-br/sql/t-sql/language-elements/try-catch-transact-sql?view=sql-server-ver15
+https://stackoverflow.com/questions/25146656/sql-try-catch-rollback-commit-preventing-erroneous-commit-after-rollback/25147092
+
+https://www.ti-enxame.com/pt/sql/sql-trycatch-rollbackcommit-evitando-confirmacao-incorreta-apos-reversao/1048278348/
+
+https://www.devmedia.com.br/incluindo-em-sua-procedure-tratamentos-de-erro/9235
+
+https://www.sqlservertutorial.net/sql-server-stored-procedures/sql-server-try-catch/
+
+--Toninho!
+https://qastack.com.br/dba/31279/transaction-and-try-catch-in-sql-server-job

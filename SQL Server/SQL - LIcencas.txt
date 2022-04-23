@@ -1,0 +1,4 @@
+Exec sys.sp_readerrorlog 
+	@p1 = 0,
+	@p2 = 1,
+	@p3 = N'licens'

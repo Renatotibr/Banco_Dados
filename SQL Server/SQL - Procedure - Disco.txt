@@ -1,0 +1,139 @@
+USE master
+GO
+CREAtE PROCEDURE dba_CheckList_Disk_Space
+as
+BEGIN 
+SET NOCOUNT ON
+
+
+IF (OBJECT_ID('[dbo].[CheckList_Disk_Space]') IS NOT NULL)
+	DROP TABLE [dbo].[CheckList_Disk_Space]
+
+CREATE TABLE [dbo].[CheckList_Disk_Space] (
+	[DriveName]			VARCHAR(256) NULL,
+	[TotalSize_GB]		BIGINT NULL,
+	[FreeSpace_GB]		BIGINT NULL,
+	[SpaceUsed_GB]		BIGINT NULL,
+	[SpaceUsed_Percent] DECIMAL(9, 3) NULL
+)
+
+	DECLARE @Ole_Automation sql_variant
+	SELECT @Ole_Automation = value_in_use
+	FROM sys.configurations
+	WHERE name = 'Ole Automation Procedures' 
+	
+	IF ( OBJECT_ID('tempdb..#diskspace') IS NOT NULL )
+		DROP TABLE #diskspace
+
+	CREATE TABLE [#diskspace] (
+		[Drive]				VARCHAR (10),
+		[Size (MB)]		INT,
+		[Used (MB)]		INT,
+		[Free (MB)]		INT,
+		[Free (%)]			INT,
+		[Used (%)]			INT,
+		[Used SQL (MB)]	INT, 
+		[Date]				SMALLDATETIME
+	)
+
+	IF ( OBJECT_ID('tempdb..#Database_Driver_Letters') IS NOT NULL )
+		DROP TABLE #Database_Driver_Letters
+
+	CREATE TABLE [dbo].#Database_Driver_Letters(
+		[Disk] [VARCHAR](256) NULL,
+		[Total Size in GB] [DECIMAL](15, 2) NULL,
+		[Used Size in GB] [DECIMAL](15, 2) NULL,
+		[Available Size in GB] [DECIMAL](15, 2) NULL,
+		[Space Free %] [DECIMAL](15, 2) NULL ,
+		[Space Used %] [DECIMAL](15, 2) NULL ) 
+
+	IF @Ole_Automation = 1	
+	BEGIN    
+
+		IF ( OBJECT_ID('tempdb..#dbspace') IS NOT NULL )
+			DROP TABLE #dbspace
+		
+		CREATE TABLE #dbspace (
+			[name]		SYSNAME,
+			[Path]	VARCHAR(200),
+			[Size]	VARCHAR(10),
+			[drive]		VARCHAR(30)
+		)
+		
+		IF ( OBJECT_ID('tempdb..#space') IS NOT NULL ) 
+			DROP TABLE #space 
+
+		CREATE TABLE #space (
+			[drive]		CHAR(1),
+			[mbfree]	INT
+		)
+		EXEC sp_MSforeachdb 'Use [?] INSERT INTO #dbspace SELECT CONVERT(VARCHAR(25), DB_Name()) ''Database'', CONVERT(VARCHAR(60), FileName), CONVERT(VARCHAR(8), Size / 128) ''Size in MB'', CONVERT(VARCHAR(30), Name) FROM sysfiles'
+
+		DECLARE @hr INT, @fso INT, @mbtotal INT, @TotalSpace INT, @MBFree INT, @Percentage INT,
+				@SQLDriveSize INT, @size float, @drive VARCHAR(1), @fso_Method VARCHAR(255)
+
+		SELECT	@mbtotal = 0, 
+				@mbtotal = 0
+			
+		EXEC @hr = [master].[dbo].[sp_OACreate] 'Scripting.FilesystemObject', @fso OUTPUT
+		
+		INSERT INTO #space 
+		EXEC [master].[dbo].[xp_fixeddrives]	
+
+		DECLARE CheckDrives CURSOR FOR SELECT drive,mbfree FROM #space
+		OPEN CheckDrives
+		FETCH NEXT FROM CheckDrives INTO @drive, @MBFree
+		WHILE(@@FETCH_STATUS = 0)
+		BEGIN
+			SET @fso_Method = 'Drives("' + @drive + ':").TotalSize'
+		
+			SELECT @SQLDriveSize = SUM(CONVERT(INT, [Size])) 
+			FROM #dbspace 
+			WHERE SUBSTRING([Path], 1, 1) = @drive
+		
+			EXEC @hr = [sp_OAMethod] @fso, @fso_Method, @size OUTPUT
+		
+			SET @mbtotal =  @size / (1024 * 1024)
+		
+			INSERT INTO #diskspace 
+			VALUES(	@drive + ':', @mbtotal, @mbtotal - @MBFree, @MBFree, (100 * ROUND(@MBFree, 2) / ROUND(@mbtotal, 2)), 
+					(100 - 100 * ROUND(@MBFree, 2) / ROUND(@mbtotal, 2)), @SQLDriveSize, GETDATE())
+
+			FETCH NEXT FROM CheckDrives INTO @drive,@MBFree
+		END
+		CLOSE CheckDrives
+		DEALLOCATE CheckDrives
+	END
+	ELSE
+		BEGIN
+			INSERT INTO #Database_Driver_Letters
+			SELECT DISTINCT 
+					volume_mount_point , 
+				--	file_system_type [File System Type], 
+				--	logical_volume_name as [Logical Drive Name], 
+					CONVERT(DECIMAL(18,2),total_bytes/1073741824.0) AS [Total Size in GB], ---1GB = 1073741824 bytes
+					(CONVERT(DECIMAL(18,2),total_bytes/1073741824.0) - CONVERT(DECIMAL(18,2),available_bytes/1073741824.0) ) AS [Used Size in GB],
+					CONVERT(DECIMAL(18,2),available_bytes/1073741824.0) AS [Available Size in GB], 
+					CAST(CAST(available_bytes AS FLOAT)/ CAST(total_bytes AS FLOAT) AS DECIMAL(18,2)) * 100 AS [Space Free %] ,
+					100-(CAST(CAST(available_bytes AS FLOAT)/ CAST(total_bytes AS FLOAT) AS DECIMAL(18,2)) * 100) AS [Space Used %] 		
+			FROM sys.master_files 
+			CROSS APPLY sys.dm_os_volume_stats(database_id, file_id)
+
+		END	
+	
+	INSERT INTO CheckList_Disk_Space( [DriveName], [TotalSize_GB], [FreeSpace_GB], [SpaceUsed_GB], [SpaceUsed_Percent] )
+	SELECT [Drive], [Size (MB)]/1024.00, [Free (MB)]/1024.00, [Used (MB)]/1024.00, [Used (%)] 
+	FROM #diskspace where [Used (%)]  >= 90
+
+	DECLARE @thequery nvarchar(max) = 'select [DriveName], [TotalSize_GB], [FreeSpace_GB], [SpaceUsed_GB], [SpaceUsed_Percent] from CheckList_Disk_Space'
+
+/*	UNION ALL
+	SELECT Disk,[Total Size in GB],[Available Size in GB],[Used Size in GB],[Space Used %]
+	FROM #Database_Driver_Letters where [Space Used %] >= 90
+
+	IF (@@ROWCOUNT = 0)
+	BEGIN
+		INSERT INTO [dbo].[CheckList_Disk_Space]( [DriveName], [TotalSize_GB], [FreeSpace_GB], [SpaceUsed_GB], [SpaceUsed_Percent] )
+		SELECT 'Without information.', NULL, NULL, NULL, NULL
+	END*/
+END

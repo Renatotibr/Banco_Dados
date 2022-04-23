@@ -1,0 +1,108 @@
+/*Restore Rede - Inicio 01/03/2022
+USE MASTER
+GO
+DECLARE @dia varchar(10), 
+@cmd varchar(max),
+@dir varchar(100), 
+@arq varchar(100), 
+@dest varchar(100), 
+@result INT
+
+declare @sa_arq1 varchar(300), @sa_arq2 varchar(300), @sa_arq3 varchar(300), @sa_arq4 varchar(300), @sa_arq5 varchar(300),
+@sa_arq6 varchar(300), @sa_arq7 varchar(300), @sa_arq8 varchar(300), @sa_arq9 varchar(300), @sa_arq10 varchar(300)
+
+declare @tbFiles as table (id int identity(1,1),files varchar(300));
+
+set @dia = (
+SELECT 
+CASE DATEPART(w, GETDATE()) 
+WHEN 1 THEN 'DOMINGO'
+WHEN 2 THEN 'SEGUNDA'
+WHEN 3 THEN 'TERCA'
+WHEN 4 THEN 'QUARTA'
+WHEN 5 THEN 'QUINTA' 
+WHEN 6 THEN 'SEXTA'
+WHEN 7 THEN 'SABADO'
+END AS 'DiaSemana'
+)
+
+if @dia = 'SEGUNDA' or @dia='QUARTA' or @dia='SEXTA'
+begin
+	set @dir =('\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL');
+	insert into @tbFiles--(files)
+	EXEC master..xp_cmdshell 'dir \\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\DbSgeSmartDes*.bak /b '
+	IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE NAME = 'DBSGESMARTDES_PRO')
+	BEGIN 
+		set @sa_arq1 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_01.bak%');
+		set @sa_arq2 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_02.bak%');
+		set @sa_arq3 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_03.bak%');
+		set @sa_arq4 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_04.bak%');
+		set @sa_arq5 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_05.bak%');
+		set @sa_arq6 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_06.bak%');
+		set @sa_arq7 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_07.bak%');
+		set @sa_arq8 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_08.bak%');
+		set @sa_arq9 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_09.bak%');
+		set @sa_arq10 = '\\armg61\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_10.bak%');
+
+		set @cmd =	'RESTORE DATABASE [DbSgeSmartDes_pro]'+ 
+			' FROM  DISK = '''+@sa_arq1+''''+
+				  ', DISK = '''+@sa_arq2+''''+
+				  ', DISK = '''+@sa_arq3+''''+
+				  ', DISK = '''+@sa_arq4+''''+
+				  ', DISK = '''+@sa_arq5+''''+
+				  ', DISK = '''+@sa_arq6+''''+
+				  ', DISK = '''+@sa_arq7+''''+
+				  ', DISK = '''+@sa_arq8+''''+
+				  ', DISK = '''+@sa_arq9+''''+
+				  ', DISK = '''+@sa_arq10+''''+
+				' WITH  FILE = 1,'+
+				' MOVE ''Vargas_dat'' TO ''J:\SQLDESENV\data\DbSgeSmartDes_pro.mdf'''+
+				', MOVE ''DbSgeSmartDes_1_Data'' TO ''J:\SQLDESENV\data\DbSgeSmartDes_pro_0.ndf'''+  
+				', MOVE ''Vargas_log'' TO ''J:\SQLDESENV\LOG\DbSgeSmartDes_pro_1.ldf'''+
+				', MOVE ''FILESTREAMGROUP'' TO ''J:\SQLDESENV\data\DbSgeSmartDes_pro_3.FS'''+  
+				', NOUNLOAD,  REPLACE, STATS = 10, BUFFERCOUNT = 512, MAXTRANSFERSIZE=2097152'
+
+		execute  (@cmd);
+	END
+end
+
+if @dia = 'TERCA' or @dia='QUINTA' or @dia='SABADO'
+begin
+	set @dir =('\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL');
+	insert into @tbFiles--(files)
+	EXEC master..xp_cmdshell 'dir \\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\DbSgeSmartDes*.bak /b '
+	IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE NAME = 'DBSGESMARTDES_PRO')
+	BEGIN 
+		set @sa_arq1 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_01.bak%');
+		set @sa_arq2 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_02.bak%');
+		set @sa_arq3 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_03.bak%');
+		set @sa_arq4 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_04.bak%');
+		set @sa_arq5 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_05.bak%');
+		set @sa_arq6 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_06.bak%');
+		set @sa_arq7 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_07.bak%');
+		set @sa_arq8 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_08.bak%');
+		set @sa_arq9 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_09.bak%');
+		set @sa_arq10 = '\\armg61\BACKUP22\TER_QUI_SAB\DbSgeSmartDes\FULL\'+(select files from @tbFiles where files like '%_10.bak%');
+
+		set @cmd =	'RESTORE DATABASE [DbSgeSmartDes_pro]'+ 
+			' FROM  DISK = '''+@sa_arq1+''''+
+				  ', DISK = '''+@sa_arq2+''''+
+				  ', DISK = '''+@sa_arq3+''''+
+				  ', DISK = '''+@sa_arq4+''''+
+				  ', DISK = '''+@sa_arq5+''''+
+				  ', DISK = '''+@sa_arq6+''''+
+				  ', DISK = '''+@sa_arq7+''''+
+				  ', DISK = '''+@sa_arq8+''''+
+				  ', DISK = '''+@sa_arq9+''''+
+				  ', DISK = '''+@sa_arq10+''''+
+				' WITH  FILE = 1,'+
+				' MOVE ''Vargas_dat'' TO ''J:\SQLDESENV\data\DbSgeSmartDes_pro.mdf'''+
+				', MOVE ''DbSgeSmartDes_1_Data'' TO ''J:\SQLDESENV\data\DbSgeSmartDes_pro_0.ndf'''+  
+				', MOVE ''Vargas_log'' TO ''J:\SQLDESENV\LOG\DbSgeSmartDes_pro_1.ldf'''+
+				', MOVE ''FILESTREAMGROUP'' TO ''J:\SQLDESENV\data\DbSgeSmartDes_pro_3.FS'''+  
+				', NOUNLOAD,  REPLACE, STATS = 10, BUFFERCOUNT = 512, MAXTRANSFERSIZE=2097152'
+
+		execute  (@cmd);
+	END
+end
+*/

@@ -1,0 +1,12 @@
+/*  
+SELECT *
+INTO Historico_Erros_Banco_2020_2021
+FROM TRACES_2.dbo.Historico_Erros_Banco where Dt_Evento < '2022-01-01'  
+
+begin tran
+
+  insert into dbo.Historico_Erros_Banco 
+  select * from TRACES_2.dbo.Historico_Erros_Banco [Historico_Erros_Banco] where Dt_Evento > '2021-12-31' 
+  
+commit
+*/

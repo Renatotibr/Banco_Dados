@@ -1,0 +1,18 @@
+--Consulta 04:
+declare @basededados int
+set nocount on
+set @basededados = db_id()
+select obj.name [object_name],  /*st.page_count, */ avg (dmv.avg_fragmentation_in_percent) perc_frag /*, i.fill_factor*/
+from sys.dm_db_index_physical_stats (@basededados, null, null , null, 'LIMITED') dmv
+inner join sys.indexes i
+on i.object_id = dmv.object_id
+and i.index_id = dmv.index_id
+inner join sys.objects obj
+on obj.object_id = dmv.object_id
+where dmv.index_level = 0
+and dmv.index_id > 0
+and dmv.avg_fragmentation_in_percent >= 5 /* Apenas Perc_frag maior que 5*/
+--and obj.name = 'TMOV' /* (Caso deseje o resultado de uma tabela especifica)*/
+GROUP BY obj.name
+order by perc_frag
+

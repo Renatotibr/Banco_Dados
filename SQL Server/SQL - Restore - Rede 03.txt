@@ -1,0 +1,84 @@
+USE MASTER
+GO
+IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE NAME = 'DBMATRIC_PP_pro')
+BEGIN  
+EXEC msdb.dbo.sp_delete_database_backuphistory @database_name = N'DBMATRIC_PP_pro'
+ALTER DATABASE [DBMATRIC_PP_pro] SET  SINGLE_USER WITH ROLLBACK IMMEDIATE
+DROP DATABASE [DBMATRIC_PP_pro]
+END
+GO
+
+DECLARE @dia varchar(10), 
+@cmd varchar(max),
+@dir varchar(100), 
+@arq varchar(100), 
+@dest varchar(100), 
+@result INT
+
+declare @sa_arq1 varchar(300)
+declare @tbFiles as table (id int identity(1,1),files varchar(300));
+
+set @dia = (
+SELECT 
+CASE DATEPART(w, GETDATE()) 
+WHEN 1 THEN 'DOMINGO'
+WHEN 2 THEN 'SEGUNDA'
+WHEN 3 THEN 'TERCA'
+WHEN 4 THEN 'QUARTA'
+WHEN 5 THEN 'QUINTA' 
+WHEN 6 THEN 'SEXTA'
+WHEN 7 THEN 'SABADO'
+END AS 'DiaSemana'
+)
+
+if @dia = 'SEGUNDA' or @dia='QUARTA' or @dia='SEXTA'
+begin
+	set @dir =('\\armg61\BACKUP1\SEG_QUA_SEX\DBMATRIC_PP\FULL');
+	insert into @tbFiles--(files)
+	EXEC master..xp_cmdshell 'dir \\armg61\BACKUP1\SEG_QUA_SEX\DBMATRIC_PP\FULL\DBMATRIC_PP*.bak /b '
+	IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE NAME = 'DBMATRIC_PP_PRO')
+	BEGIN 
+		set @sa_arq1 = '\\armg61\BACKUP1\SEG_QUA_SEX\DBMATRIC_PP\FULL\'+(select files from @tbFiles where files like '%.bak%');
+	
+		set @cmd =	'RESTORE DATABASE [DBMATRIC_PP_pro]'+ 
+			' FROM  DISK = '''+@sa_arq1+''''+
+			' WITH  FILE = 1,'+
+				' MOVE ''DBMATRIC_PP'' TO ''I:\SQLDESENV\data\DBMATRIC_PP_pro.mdf'''+ 
+				', MOVE ''DBMATRIC_PP_log'' TO ''J:\SQLDESENV\data\DDBMATRIC_PP_pro_1.ldf'''+  
+				', NOUNLOAD,  REPLACE, STATS = 10, BUFFERCOUNT = 512, MAXTRANSFERSIZE=2097152'
+		execute  (@cmd);
+	END
+end
+
+if @dia = 'TERCA' or @dia='QUINTA' or @dia='SABADO'
+begin
+	set @dir =('\\armg61\BACKUP22\TER_QUI_SAB\DBMATRIC_PP\FULL');
+	insert into @tbFiles--(files)
+	EXEC master..xp_cmdshell 'dir \\armg61\BACKUP22\TER_QUI_SAB\DBMATRIC_PP\FULL\DBMATRIC_PP*.bak /b '
+	IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE NAME = 'DBMATRIC_PP_PRO')
+	BEGIN 
+		set @sa_arq1 = '\\armg61\BACKUP22\TER_QUI_SAB\DBMATRIC_PP\FULL\'+(select files from @tbFiles where files like '%.bak%');
+	
+		set @cmd =	'RESTORE DATABASE [DBMATRIC_PP_pro]'+ 
+			' FROM  DISK = '''+@sa_arq1+''''+
+			' WITH  FILE = 1,'+
+				' MOVE ''DBMATRIC_PP'' TO ''I:\SQLDESENV\data\DBMATRIC_PP_pro.mdf'''+ 
+				', MOVE ''DBMATRIC_PP_log'' TO ''J:\SQLDESENV\data\DDBMATRIC_PP_pro_1.ldf'''+  
+				', NOUNLOAD,  REPLACE, STATS = 10, BUFFERCOUNT = 512, MAXTRANSFERSIZE=2097152'
+		execute  (@cmd);
+	END
+end
+
+ALTER DATABASE [DBMATRIC_PP_pro] SET RECOVERY SIMPLE WITH NO_WAIT
+GO
+ALTER DATABASE [DBMATRIC_PP_pro] SET MULTI_USER
+GO
+USE [DBMATRIC_PP_pro]
+GO
+EXEC sp_adduser 'Desenv'
+GO
+EXEC SP_ADDROLEMEMBER 'DB_OWNER','Desenv'
+GO
+ALTER USER [Desenv] WITH DEFAULT_SCHEMA=[dbo]
+--GO
+--DBCC SHRINKDATABASE (DBMATRIC_PP_pro, 10)

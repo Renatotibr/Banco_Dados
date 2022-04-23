@@ -1,0 +1,1 @@
+https://imasters.com.br/banco-de-dados/consultando-o-log-de-erro-do-sql-server-usando-t-sql-2

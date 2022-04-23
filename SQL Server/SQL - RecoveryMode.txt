@@ -1,0 +1,8 @@
+
+/*******/
+SELECT DATABASEPROPERTYEX('name_of_the_database', 'Recovery');
+
+/*******/
+SELECT recovery_model_desc 
+FROM sys.databases
+WHERE name = 'name_of_the_database';

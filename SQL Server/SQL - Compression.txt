@@ -1,0 +1,12 @@
+--Tabelas com compressao
+select distinct t.name AS CompressedTables
+from sys.partitions p
+inner join sys.tables t
+on p.object_id = t.object_id
+where p.data_compression > 0
+
+
+https://www.dirceuresende.com/blog/comprimindo-todas-as-tabelas-de-um-database-no-sql-server/
+https://fabridata.com/compactacao-de-dados-no-sql-server/
+https://docs.microsoft.com/pt-br/sql/relational-databases/data-compression/data-compression?view=sql-server-ver15
+https://www.sqlrx.com/get-a-list-of-tables-that-are-compressed/

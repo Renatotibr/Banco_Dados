@@ -1,0 +1,1 @@
+https://www.dirceuresende.com/blog/sql-server-como-executar-em-batch-todos-os-scripts-sql-de-uma-pasta-ou-diretorio-pelo-sqlcmd/

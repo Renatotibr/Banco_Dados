@@ -1,0 +1,164 @@
+USE MASTER
+GO
+SELECT TOP 10  'UTILIZACAO DE PROCESSADOR: ' TIPO
+, (SUM((CAST(sp.cpu AS NUMERIC(30,2)))) / (CPU.TOTAL_PROCESS)) * 100 AS '%'
+, SUM((CAST(sp.cpu AS NUMERIC(30,2)))) AS 'CPU'
+, CPU.TOTAL_PROCESS
+, substring(sd.name,1, 30) AS 'DBNAME'
+, substring(sp.hostname,1,30) AS 'HOSTNAME'
+, substring(sp.nt_username,1,50) AS 'NT_USERNAME'
+, substring(program_name,1,50) AS 'PROGRAM_NAME'
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) AS 'KILL'
+FROM SYS.sysprocesses sp (NOLOCK) INNER JOIN SYS.sysdatabases sd (nolock)
+	ON sp.dbid=sd.dbid 
+CROSS JOIN (SELECT SUM(CAST(CPU AS NUMERIC(30,2))) 'TOTAL_PROCESS'
+			FROM SYS.sysprocesses (NOLOCK)) CPU
+GROUP BY CPU.TOTAL_PROCESS
+, substring(sd.name,1, 30) 
+, substring(sp.hostname,1,30) 
+, substring(sp.nt_username,1,50) 
+, substring(program_name,1,50) 
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) 
+ORDER BY CPU DESC
+
+SELECT 'MAIOR USO DO PROCESSADOR: ' TIPO
+, (SUM((CAST(sp.cpu AS NUMERIC(30,2)))) / (CPU.TOTAL_PROCESS)) * 100 AS '%'
+, SUM((CAST(sp.cpu AS NUMERIC(30,2)))) AS 'CPU'
+, CPU.TOTAL_PROCESS
+, substring(sd.name,1, 30) AS 'DBNAME'
+, substring(sp.hostname,1,30) AS 'HOSTNAME'
+, substring(sp.nt_username,1,50) AS 'NT_USERNAME'
+, substring(program_name,1,50) AS 'PROGRAM_NAME'
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) AS 'KILL'
+FROM SYS.sysprocesses sp (NOLOCK) INNER JOIN SYS.sysdatabases sd (nolock)
+	ON sp.dbid=sd.dbid 
+CROSS JOIN (SELECT SUM(CAST(CPU AS NUMERIC(30,2))) 'TOTAL_PROCESS'
+			FROM SYS.sysprocesses (NOLOCK)) CPU
+INNER JOIN (SELECT TOP 1 Spid, SUM(CAST(CPU AS NUMERIC(30,2))) AS 'MAX_CPU_PROCESS'
+			FROM SYS.sysprocesses (NOLOCK) GROUP BY SPID 
+			ORDER BY SUM(CAST(CPU AS NUMERIC(30,2))) DESC) MAX_CPU
+		ON MAX_CPU.SPID=SP.SPID
+GROUP BY CPU.TOTAL_PROCESS
+, substring(sd.name,1, 30) 
+, substring(sp.hostname,1,30) 
+, substring(sp.nt_username,1,50) 
+, substring(program_name,1,50) 
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) 
+
+SELECT TOP 10  'UTILIZACAO DE MEMORIA: ' TIPO
+, (SUM((CAST(sp.memusage AS NUMERIC(30,2)))) / (MEM.TOTAL_MEMORIA_USAGE)) * 100 AS '%'
+, SUM((CAST(sp.memusage AS NUMERIC(30,2)))) AS 'MEMUSAGE'
+, MEM.TOTAL_MEMORIA_USAGE
+, substring(sd.name,1, 30) AS 'DBNAME'
+, substring(sp.hostname,1,30) AS 'HOSTNAME'
+, substring(sp.nt_username,1,50) AS 'NT_USERNAME'
+, substring(program_name,1,50) AS 'PROGRAM_NAME'
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) AS 'KILL'
+FROM SYS.sysprocesses sp (NOLOCK) INNER JOIN SYS.sysdatabases sd (nolock)
+	ON sp.dbid=sd.dbid 
+CROSS JOIN (SELECT SUM(CAST(memusage AS NUMERIC(30,2))) 'TOTAL_MEMORIA_USAGE'
+			FROM SYS.sysprocesses (NOLOCK)) MEM
+GROUP BY MEM.TOTAL_MEMORIA_USAGE
+, substring(sd.name,1, 30) 
+, substring(sp.hostname,1,30) 
+, substring(sp.nt_username,1,50) 
+, substring(program_name,1,50) 
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) 
+ORDER BY MEMUSAGE DESC
+
+SELECT TOP 10  'MAIOR UTILIZACAO DE MEMORIA: ' TIPO
+, (SUM((CAST(sp.memusage AS NUMERIC(30,2)))) / (MEM.TOTAL_MEMORIA_USAGE)) * 100 AS '%'
+, SUM((CAST(sp.memusage AS NUMERIC(30,2)))) AS 'MEMUSAGE'
+, MEM.TOTAL_MEMORIA_USAGE
+, substring(sd.name,1, 30) AS 'DBNAME'
+, substring(sp.hostname,1,30) AS 'HOSTNAME'
+, substring(sp.nt_username,1,50) AS 'NT_USERNAME'
+, substring(program_name,1,50) AS 'PROGRAM_NAME'
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) AS 'KILL'
+FROM SYS.sysprocesses sp (NOLOCK) INNER JOIN SYS.sysdatabases sd (nolock)
+	ON sp.dbid=sd.dbid 
+CROSS JOIN (SELECT SUM(CAST(memusage AS NUMERIC(30,2))) 'TOTAL_MEMORIA_USAGE'
+			FROM SYS.sysprocesses (NOLOCK)) MEM
+INNER JOIN (SELECT TOP 1 Spid, SUM(CAST(memusage AS NUMERIC(30,2))) AS 'MAX_CPU_PROCESS'
+			FROM SYS.sysprocesses (NOLOCK) GROUP BY SPID 
+			ORDER BY SUM(CAST(memusage AS NUMERIC(30,2))) DESC) MAX_USAGE
+		ON MAX_USAGE.SPID=SP.SPID
+GROUP BY MEM.TOTAL_MEMORIA_USAGE
+, substring(sd.name,1, 30) 
+, substring(sp.hostname,1,30) 
+, substring(sp.nt_username,1,50) 
+, substring(program_name,1,50) 
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) 
+ORDER BY MEMUSAGE DESC
+
+	
+SELECT TOP 10  'UTILIZACAO DE DISCO: ' TIPO
+, (SUM((CAST(sp.physical_io AS NUMERIC(30,2)))) / (MEM.TOTAL_PHYSICAL_IO)) * 100 AS '%'
+, SUM((CAST(sp.physical_io AS NUMERIC(30,2)))) AS 'PHYSICAL_IO'
+, MEM.TOTAL_PHYSICAL_IO
+, substring(sd.name,1, 30) AS 'DBNAME'
+, substring(sp.hostname,1,30) AS 'HOSTNAME'
+, substring(sp.nt_username,1,50) AS 'NT_USERNAME'
+, substring(program_name,1,50) AS 'PROGRAM_NAME'
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) AS 'KILL'
+FROM SYS.sysprocesses sp (NOLOCK) INNER JOIN SYS.sysdatabases sd (nolock)
+	ON sp.dbid=sd.dbid 
+CROSS JOIN (SELECT SUM(CAST(physical_io AS NUMERIC(30,2))) 'TOTAL_PHYSICAL_IO'
+			FROM SYS.sysprocesses (NOLOCK)) MEM
+GROUP BY MEM.TOTAL_PHYSICAL_IO
+, substring(sd.name,1, 30) 
+, substring(sp.hostname,1,30) 
+, substring(sp.nt_username,1,50) 
+, substring(program_name,1,50) 
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) 
+ORDER BY PHYSICAL_IO DESC
+
+SELECT TOP 10  'MAIOR UTILIZACAO DE DISCO: ' TIPO
+, (SUM((CAST(sp.physical_io AS NUMERIC(30,2)))) / (MEM.TOTAL_PHYSICAL_IO)) * 100 AS '%'
+, SUM((CAST(sp.physical_io AS NUMERIC(30,2)))) AS 'PHYSICAL_IO'
+, MEM.TOTAL_PHYSICAL_IO
+, substring(sd.name,1, 30) AS 'DBNAME'
+, substring(sp.hostname,1,30) AS 'HOSTNAME'
+, substring(sp.nt_username,1,50) AS 'NT_USERNAME'
+, substring(program_name,1,50) AS 'PROGRAM_NAME'
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) AS 'KILL'
+FROM SYS.sysprocesses sp (NOLOCK) INNER JOIN SYS.sysdatabases sd (nolock)
+	ON sp.dbid=sd.dbid 
+CROSS JOIN (SELECT SUM(CAST(physical_io AS NUMERIC(30,2))) 'TOTAL_PHYSICAL_IO'
+			FROM SYS.sysprocesses (NOLOCK)) MEM
+INNER JOIN (SELECT TOP 1 Spid, SUM(CAST(PHYSICAL_IO AS NUMERIC(30,2))) AS 'MAX_CPU_PHYSICAL_IO'
+			FROM SYS.sysprocesses (NOLOCK) GROUP BY SPID 
+			ORDER BY SUM(CAST(PHYSICAL_IO AS NUMERIC(30,2))) DESC) MAX_PHYSICAL_IO
+		ON MAX_PHYSICAL_IO.SPID=SP.SPID
+GROUP BY MEM.TOTAL_PHYSICAL_IO
+, substring(sd.name,1, 30) 
+, substring(sp.hostname,1,30) 
+, substring(sp.nt_username,1,50) 
+, substring(program_name,1,50) 
+, sp.status, sp.spid, sp.blocked
+, 'kill ' + ltrim(rtrim(str( sp.spid))) 
+ORDER BY PHYSICAL_IO DESC
+/*
+--VISUALIZAR O PROCESSO
+--DBCC INPUTBUFFER(54)
+
+--PARA MATAR O PROCESSO
+kill 248
+kill 353
+kill 176
+kill 25
+kill 283
+
+SELECT * FROM SYS.DM_OS_WAIT_STATS
+*/

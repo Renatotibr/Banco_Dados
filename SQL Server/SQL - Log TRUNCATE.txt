@@ -1,0 +1,24 @@
+DECLARE @db_id INT, 
+        @db VARCHAR(100), 
+        @db_log VARCHAR(100), @qry VARCHAR(1000);
+
+ DECLARE cr CURSOR FOR
+    SELECT d.name db, l.name db_log
+      FROM sys.databases d
+      JOIN sys.master_files l 
+        ON d.database_id=l.database_id
+     WHERE d.name NOT IN('master','tempdb','model','msdb')
+       AND l.type_desc='LOG'
+ OPEN cr;
+ FETCH NEXT FROM cr INTO @db, @db_log;
+ WHILE @@FETCH_STATUS = 0
+ BEGIN
+   SET @qry = 'USE ' + @db + '' 
+   SET @qry = @qry+ ' ALTER DATABASE ' +  @db + ' ' +'SET RECOVERY SIMPLE WITH NO_WAIT';
+   SET @qry = @qry+ ' DBCC SHRINKFILE ('+ @db_log + ',1)' 
+   SET @qry = @qry+ ' ALTER DATABASE ' +  @db + ' ' +'SET RECOVERY FULL WITH NO_WAIT';
+   EXECUTE (@qry);
+   FETCH NEXT FROM cr INTO @db, @db_log;
+ END;
+ CLOSE cr;
+ DEALLOCATE cr;

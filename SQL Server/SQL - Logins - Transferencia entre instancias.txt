@@ -1,0 +1,2 @@
+https://docs.microsoft.com/pt-br/troubleshoot/sql/security/transfer-logins-passwords-between-instances
+https://www.dirceuresende.com/blog/sql-server-como-transferir-logins-entre-instancias-gerando-engenharia-reserva-de-usuarios-logins-e-permissoes/

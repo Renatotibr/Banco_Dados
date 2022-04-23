@@ -1,0 +1,21 @@
+--Conteudo Procedure
+sp_helptext PConsultaText
+
+--Procecedure pelo conteudo
+exec PConsultaText '@@TRANCOUNT'
+
+    SELECT DISTINCT O.name AS NomeObjeto,     
+ CASE     
+    WHEN xtype ='P'  THEN 'PROCEDURE'    
+    WHEN xtype ='U'  THEN 'TABELA'    
+    WHEN xtype ='V'  THEN 'VIEW'    
+    WHEN xtype ='FN' THEN 'FUNÇÃO'    
+    END AS TIPOOBJETO    
+      FROM sysobjects O    
+INNER JOIN syscomments C     
+        ON C.id = O.id    
+     WHERE xtype IN ('P','U','V','FN')     
+    AND text LIKE '%TEXTO%'  
+
+--
+https://dbasqlserverbr.com.br/executar-o-mesmo-comando-para-todos-os-bancos-de-dados-no-sql-server/

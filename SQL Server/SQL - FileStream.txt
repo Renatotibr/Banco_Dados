@@ -1,0 +1,23 @@
+--Tabelas do Filestream
+SELECT      t.name AS 'table',
+            c.name AS 'column', 
+            fg.name AS 'filegroup_name', 
+            dbf.type_desc AS 'type_description',
+            dbf.physical_name AS 'physical_location'
+FROM        sys.filegroups fg
+INNER JOIN  sys.database_files dbf
+ON          fg.data_space_id = dbf.data_space_id
+INNER JOIN  sys.tables t
+ON          fg.data_space_id = t.filestream_data_space_id
+INNER JOIN  sys.columns c
+ON          t.object_id = c.object_id
+AND         c.is_filestream = 1	
+
+
+--Arquivos
+SELECT 
+[Filegroup_Name] = fg.[name],
+[DB_File_Logical_Name] = df.[name],
+[DB_File_Physical_Name] = df.[physical_name]
+FROM sys.filegroups fg
+JOIN sys.database_files df ON df.[data_space_id] = fg.[data_space_id]

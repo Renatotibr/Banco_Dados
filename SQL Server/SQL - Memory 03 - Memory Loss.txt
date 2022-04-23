@@ -1,0 +1,17 @@
+--Quantidade de espaço "Vazio" na memória
+SELECT 
+	COUNT(*) * 8 / 1024 AS [MBUsed],
+	SUM (CONVERT(bigint,[free_space_in_bytes])) / (1024 * 1024) AS [MBEmpty]
+	FROM sys.dm_os_buffer_descriptors;
+
+
+--Quantidade de mem´roia desperdiçada por banco de Dados
+SELECT 
+	(CASE WHEN ([DATABASE_ID] = 32767)
+	THEN N'RESOURCE DATABASE'
+	ELSE DB_NAME ([DATABASE_ID]) END) AS [DATABASENAME],
+	COUNT (*) * 8 / 1024 AS [MBUSED],
+SUM (CONVERT(bigint,[free_space_in_bytes])) / (1024 * 1024) AS [MBEmpty]
+FROM SYS.DM_OS_BUFFER_DESCRIPTORS
+GROUP BY [database_id];
+GO

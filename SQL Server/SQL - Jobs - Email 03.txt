@@ -1,0 +1,30 @@
+USE MASTER
+GO
+declare @tbFiles as table (id int identity(1,1),files varchar(300));
+insert into @tbFiles--(files)
+EXEC master..xp_cmdshell 'dir K:\BACKUP1\SEG_QUA_SEX\DbSgeSmartDes\FULL\DbSgeSmartDes_FULL*.bak /b '
+
+declare @tbFiles2 as table (id int identity(1,1),files varchar(300));
+insert into @tbFiles2--(files)
+EXEC master..xp_cmdshell 'dir H:\BACKUP2\TER_QUI_SAB\DbSgeSmartDes\FULL\DbSgeSmartDes_FULL*.bak /b '
+
+IF 10 <> (select count(1) from @tbFiles where files like 'DbSgeSmartDes%')
+BEGIN
+	EXEC msdb.dbo.sp_send_dbmail
+		@profile_name = 'Equipe DBAs',
+		@recipients = 'renato.barbosa@mg.senac.br',
+		@subject = 'ARMG61 - Backup Ausente DbSgeSmartDes',
+		@body = 'Verificar se o backup da Base de Dados DbSgeSmartDes foi criado (SEG_QUA_SEX)',
+		@attach_query_result_as_file = 0 ;
+END
+
+IF 10 <> (select count(1) from @tbFiles2 where files like 'DbSgeSmartDes%')
+BEGIN
+	EXEC msdb.dbo.sp_send_dbmail
+		@profile_name = 'Equipe DBAs',
+		@recipients = 'renato.barbosa@mg.senac.br',
+		@subject = 'ARMG61 - Backup Ausente DbSgeSmartDes',
+		@body = 'Verificar se o backup da Base de Dados DbSgeSmartDes foi criado (TER_QUI_SAB)',
+		@attach_query_result_as_file = 0 ;
+END
+

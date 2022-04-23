@@ -1,0 +1,9 @@
+IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE NAME = 'DbSgeSmartDesRelatorio')
+begin
+	EXEC msdb.dbo.sp_send_dbmail
+		@profile_name = 'Equipe DBAs',
+		@recipients = 'renato.barbosa@mg.senac.br',
+		@subject = 'ARMG260 - Base de Dados DbSgeSmartDesRelatorio',
+		@body = 'Verificar a restauração da Base de Dados DbSgeSmartDesRelatorio',
+		@attach_query_result_as_file = 0 ;
+end

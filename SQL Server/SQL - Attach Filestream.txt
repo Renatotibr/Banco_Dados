@@ -1,0 +1,13 @@
+https://dbtut.com/index.php/2018/09/01/how-to-detach-and-attach-a-database-containing-filestream-data/
+https://www.mssqltips.com/sqlservertip/1878/how-to-detach-and-attach-a-sql-server-filestream-enabled-database/
+
+USE [master]
+GO
+
+CREATE DATABASE [FileStreamDB] ON 
+( FILENAME = N'C:\FileStreamDB\FileStreamDB.mdf' ),
+( FILENAME = N'C:\FileStreamDB\FileStreamDB_log.ldf' ),
+FILEGROUP [FileStreamGroup] CONTAINS FILESTREAM DEFAULT 
+( NAME = N'FileStreamDB_FSData', FILENAME = N'C:\FileStreamDB\FileStreamData' )
+FOR ATTACH
+GO

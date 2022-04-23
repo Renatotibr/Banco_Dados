@@ -1,0 +1,27 @@
+-- Descreve a instrução de Transact-SQL RESTORE FILELISTONLY, que é usada para retornar um conjunto de resultados contendo uma lista dos bancos de dados e arquivos de log contidas no conjunto de backups.
+RESTORE FILELISTONLY 
+FROM DISK='C:\Database\Exemplo1210\EXEMPLO1211.bak'
+
+-- Descreve a instrução de Transact-SQL RESTORE LABELONLY, que é usada para retornar um conjunto de resultados contendo informações sobre a mídia de backup identificada pelo dispositivo de backup determinado. 
+RESTORE LABELONLY
+FROM DISK='C:\Database\Exemplo1210\EXEMPLO1211.bak'
+
+--Descreve a instrução de Transact-SQL RESTORE HEADERONLY, que é usada para retornar um conjunto de resultados que contém todas as informações de cabeçalho de backup de todos os conjuntos de backups em um dispositivo de backup em particular. 
+RESTORE HEADERONLY
+FROM DISK='C:\Database\Exemplo1210\EXEMPLO1211.bak'
+
+[09/03/2015 17:27] Samuel Caldeira de Andrade: 
+
+RESTORE HEADERONLY 
+FROM DISK = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\Backup\CorporeRM_Teste.bak'
+go
+[09/03/2015 17:27] Samuel Caldeira de Andrade: 
+https://msdn.microsoft.com/pt-br/library/ms190747.aspx
+[09/03/2015 17:28] Samuel Caldeira de Andrade: 
+RESTORE HEADERONLY 
+FROM DISK = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\Backup\CorporeRM_Teste.bak'
+go
+
+RESTORE LABELONLY
+FROM DISK = N'C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\Backup\CorporeRM_Teste.bak'
+GO

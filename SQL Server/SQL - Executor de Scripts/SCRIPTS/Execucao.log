@@ -1,0 +1,55 @@
+ 
+-------------------------------------------------------- 
+26/11/2021 15:05:17,63 Executando o script "E:\DBA\SCRIPTS\02\02_Teste.sql"... 
+-------------------------------------------------------- 
+ 
+Changed database context to 'HTAF'.
+Msg 2714, Level 16, State 6, Server ARMG51, Line 2
+There is already an object named '01010e' in the database.
+Msg 1781, Level 16, State 1, Server ARMG51, Line 2
+Column already has a DEFAULT bound to it.
+Msg 1750, Level 16, State 1, Server ARMG51, Line 2
+Could not create constraint or index. See previous errors.
+Msg 1781, Level 16, State 1, Server ARMG51, Line 2
+Column already has a DEFAULT bound to it.
+Msg 1750, Level 16, State 1, Server ARMG51, Line 2
+Could not create constraint or index. See previous errors.
+Msg 1781, Level 16, State 1, Server ARMG51, Line 2
+Column already has a DEFAULT bound to it.
+Msg 1750, Level 16, State 1, Server ARMG51, Line 2
+Could not create constraint or index. See previous errors.
+Msg 1781, Level 16, State 1, Server ARMG51, Line 2
+Column already has a DEFAULT bound to it.
+Msg 1750, Level 16, State 1, Server ARMG51, Line 2
+Could not create constraint or index. See previous errors.
+Msg 1781, Level 16, State 1, Server ARMG51, Line 2
+Column already has a DEFAULT bound to it.
+Msg 1750, Level 16, State 1, Server ARMG51, Line 2
+Could not create constraint or index. See previous errors.
+Msg 1781, Level 16, State 1, Server ARMG51, Line 2
+Column already has a DEFAULT bound to it.
+Msg 1750, Level 16, State 1, Server ARMG51, Line 2
+Could not create constraint or index. See previous errors.
+Msg 1781, Level 16, State 1, Server ARMG51, Line 2
+Column already has a DEFAULT bound to it.
+Msg 1750, Level 16, State 1, Server ARMG51, Line 2
+Could not create constraint or index. See previous errors.
+ 
+Fim da execucao: 26/11/2021 15:05:17,69 
+-------------------------------------------------------- 
+ 
+ 
+-------------------------------------------------------- 
+26/11/2021 15:05:17,69 Executando o script "E:\DBA\SCRIPTS\03\03_Teste.sql"... 
+-------------------------------------------------------- 
+ 
+Changed database context to 'HTAF'.
+C01_FILIAL
+----------
+
+(0 rows affected)
+ 
+Fim da execucao: 26/11/2021 15:05:17,75 
+-------------------------------------------------------- 
+ 
+ 

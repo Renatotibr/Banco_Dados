@@ -1,0 +1,28 @@
+USe Master
+declare @conta int;
+DECLARE @thequery nvarchar(max) = 'SELECT A.Step_Id, left(B.name,40), + '' - '' + left(A.Message,100), A.Run_Date FROM msdb.dbo.Sysjobhistory A
+				JOIN msdb.dbo.Sysjobs B ON A.Job_Id = B.Job_Id
+				WHERE A.Run_Date = CONVERT(nvarchar(8), GETDATE()-1, 112) 
+				and run_status <> 1 and step_id<>0
+				ORDER BY step_id';
+set @conta = (
+	select COUNT(1)
+	from msdb.dbo.sysjobhistory h inner 
+	join msdb.dbo.sysjobs j on h.job_id=j.job_id
+	where run_date = CONVERT(nvarchar(8), GETDATE()-1, 112) and run_status <> 1 and step_id<>0
+)
+if @conta > 0
+begin
+	EXECUTE AS LOGIN = 'SENAC_ADM\sqladmin';
+	EXEC msdb.dbo.sp_send_dbmail
+		@profile_name = 'Equipe DBAs',
+		@recipients = 'renato.barbosa@mg.senac.br',
+		@subject = 'ARMG60 - JOBS',
+		@query = @thequery,
+		@body = 'Verificar Jobs não executados no dia anterior
+		
+		',
+		@query_result_header = 0,
+--		@exclude_query_output = 1,
+		@attach_query_result_as_file = 0 ;
+end

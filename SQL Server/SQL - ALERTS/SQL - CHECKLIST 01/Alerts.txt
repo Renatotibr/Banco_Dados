@@ -1,0 +1,4 @@
+https://www.fabriciolima.net/blog/2019/09/22/passo-a-passo-de-como-criar-40-alertas-para-monitorar-seu-sql-server/
+https://www.fabriciolima.net/blog/2017/05/01/criando-um-e-mail-de-checklist-diario-no-sql-server/
+https://www.fabriciolima.net/blog/2017/10/05/video-criando-15-alertas-no-sql-server-em-apenas-5-minutos/
+https://cursos.powertuning.com.br/path-player?courseid=criando-40-alertas-para-monitorar-o-sql-server&unit=5d87f661c1ba31e9678b459eUnit

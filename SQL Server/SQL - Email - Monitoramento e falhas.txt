@@ -1,0 +1,2 @@
+https://www.dirceuresende.com/blog/como-habilitar-enviar-monitorar-emails-pelo-sql-server-sp_send_dbmail/
+https://luizlima.net/casos-do-dia-a-dia-database-mail-falha-envio-email-status-unsent/

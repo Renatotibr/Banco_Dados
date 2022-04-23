@@ -1,0 +1,1 @@
+https://blog.sqlauthority.com/2016/03/30/sql-server-query-active-directory-data-using-adsi-ldap-linked-server/

@@ -1,0 +1,16 @@
+https://docs.microsoft.com/pt-br/sql/database-engine/configure-windows/optimize-for-ad-hoc-workloads-server-configuration-option?view=sql-server-ver15
+
+SELECT Distinct objtype, cacheobjtype, 
+  AVG(usecounts) AS Avg_UseCount, 
+  SUM(refcounts) AS AllRefObjects, 
+  SUM(CAST(size_in_bytes AS bigint))/1024/1024 AS Size_MB
+FROM sys.dm_exec_cached_plans
+WHERE /*objtype = 'Adhoc' AND */ usecounts = 1
+GROUP BY objtype, cacheobjtype;
+
+
+https://imasters.com.br/data/utilizando-o-optimize-for-ad-hoc-workloads
+https://blog.sqlauthority.com/2017/10/20/sql-server-turn-optimize-ad-hoc-workloads/
+https://www.red-gate.com/simple-talk/blogs/using-optimize-for-ad-hoc-workloads/
+
+https://bornsql.ca/blog/dont-optimize-for-ad-hoc-workloads-as-a-best-practice/

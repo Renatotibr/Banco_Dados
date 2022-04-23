@@ -1,0 +1,4 @@
+https://dba.stackexchange.com/questions/12286/sql-server-temporary-vs-physical-tables
+
+
+https://www.brentozar.com/archive/2019/06/whats-better-ctes-or-temp-tables/

@@ -1,0 +1,3 @@
+--Consulta verifica historico de paginas corrompidas (Parametro CHECKSUM habilitado na Base)
+
+select DB_NAME(database_id) as Base, * from msdb.dbo.suspect_pages

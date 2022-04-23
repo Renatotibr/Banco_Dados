@@ -1,0 +1,3 @@
+--Alertas
+https://www.mssqltips.com/sqlservertip/3489/configure-sql-server-alerts-and-notifications-for-alwayson-availability-groups/
+

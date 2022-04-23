@@ -1,0 +1,8 @@
+https://mssqldbatips.com/syspolicy_purge_history-job-failing-at-step-3-erase-phantom-system-health-records/
+
+https://www-sqlserver--dba-com.translate.goog/2012/10/sql-server-erase-phantom-system-health-records-reason-193.html?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=pt-BR&_x_tr_pto=nui,sc
+https://jasonbrimhall-info.translate.goog/2014/01/04/day-11-purging-syspolicy/?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=pt-BR&_x_tr_pto=nui,sc
+
+https://www.mssqltips.com/sqlservertip/2041/why-syspolicypurgehistory-job-fails-in-sql-server-2008-failover-cluster-instance/
+
+Executar-> gpedit.msc Configuração do Computador -> Modelos administrativos do Windows-> Componentes do Windows-> Windows Powershell-> ativar a Execução de Script e Permitir todos os scripts (Política de Execução)

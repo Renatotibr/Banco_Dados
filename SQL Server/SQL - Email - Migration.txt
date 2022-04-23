@@ -1,0 +1,3 @@
+https://www.sqlservercentral.com/scripts/script-out-existing-database-mail-profiles-settings
+https://skreebydba.com/2017/11/06/migrating-sql-server-database-mail-settings/
+https://github.com/skreebydba/skreebydbablog/blob/main/MigrateDbMailSettings.sql

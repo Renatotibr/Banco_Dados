@@ -1,0 +1,27 @@
+USE master
+GO 
+exec dba_CheckList_Disk_Space
+GO
+use master
+go
+declare @conta int;
+DECLARE @thequery nvarchar(max) = 'select left(DriveName,40) as DriveName, left(TotalSize_GB,40) as TotalSize_GB, left(FreeSpace_GB,40) as FreeSpace_GB, left(SpaceUsed_GB,40) as SpaceUsed_GB, left(SpaceUsed_Percent,40) as SpaceUsed_Percent  from CheckList_Disk_Space';
+set @conta = (
+	select COUNT(1)
+	from CheckList_Disk_Space
+)
+if @conta > 0
+begin
+	EXECUTE AS LOGIN = 'SENAC_ADM\sqladmin';
+	EXEC msdb.dbo.sp_send_dbmail
+		@profile_name = 'Equipe DBAs',
+		@recipients = 'renato.barbosa@mg.senac.br',
+		@subject = 'ARMG61 - Disco 10%',
+		@query = @thequery,
+		@body = 'Discos com menos de 10%:
+		
+		',
+		@query_result_header = 1,
+		@exclude_query_output = 1,
+		@attach_query_result_as_file = 0 ;
+end
