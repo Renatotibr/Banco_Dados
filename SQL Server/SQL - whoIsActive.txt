@@ -1,0 +1,6 @@
+--FILTRO armg61
+EXEC sp_whoIsActive
+@output_column_list = '[dd hh:mm:ss.mss],[SQL_text], [database_name],[host_name],[Login_name], [status], [wait_info],[session_id], [blocking_session_id],[Percent_complete],
+[open_tran_count]',
+@not_filter = 'DBMATRIC_PP',
+@not_filter_type = 'database'
