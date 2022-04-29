@@ -31,5 +31,18 @@ https://www.sqlshack.com/overview-of-the-shrink-tempdb-database-in-sql-server/
    go
    -- this command shrinks the log file, examine the last paragraph.
 
+
+USE master;
+GO
+
+ALTER DATABASE tempdb 
+MODIFY FILE (NAME = tempdev, FILENAME = 'D:\DBAtempdb.mdf');
+GO
+
+ALTER DATABASE tempdb 
+MODIFY FILE (NAME = templog, FILENAME = 'D:\DBA\templog.ldf');
+GO
+
+
 --Deu ruim 
 https://support.microsoft.com/pt-br/topic/como-reduzir-o-banco-de-dados-tempdb-no-sql-server-ea0a95c2-eff8-7075-9ee2-2ee42226ca1c
