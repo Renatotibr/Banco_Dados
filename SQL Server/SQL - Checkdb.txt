@@ -1,3 +1,8 @@
 --Consulta verifica historico de paginas corrompidas (Parametro CHECKSUM habilitado na Base)
 
 select DB_NAME(database_id) as Base, * from msdb.dbo.suspect_pages
+
+
+--https://www.mssqltips.com/sqlservertip/2399/minimize-performance-impact-of-sql-server-dbcc-checkdb/#:~:text=DBCC%20CHECKDB%20WITH%20PHYSICAL_ONLY&text=This%20option%20is%20specifically%20designed,can%20compromise%20a%20user%27s%20data.
+
+https://www.mssqltips.com/sqlservertip/4490/sql-server-2016-dbcc-checkdb-with-maxdop/
