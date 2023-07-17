@@ -10,3 +10,49 @@ begin tran
   
 commit
 */
+
+SCRIPT 2
+
+/*
+BEGIN TRAN
+INSERT INTO lx_mid.[MID_CADASTRO_PRODUTO]
+           ([ID_CADASTRO_PRODUTO]
+           ,[ID_CADASTRO]
+           ,[ID_PRODUTO]
+           ,[INATIVO]
+           ,[LX_SITUACAO_SERVICO]
+           ,[LX_AMBIENTE]
+           ,[DATA_INICIO_UTLIZACAO]
+           ,[DATA_FINAL_UTILIZACAO]
+           ,[INDICA_CONTINGENCIA_AUTO]
+           ,[INDICA_AUTORIZA_SINCRONO]
+           ,[TEMPO_GUARDA]
+           ,[DATA_ENTRADA_CONTINGENCIA_AUTO]
+           ,[DATA_ENVIO_EMAIL]
+           ,[ERRO_ENVIO_EMAIL]
+           ,[DATA_CHECK_CONTINGENCIA])
+     select --TOP 1000
+			newid()
+           ,P.[ID_CADASTRO]
+           ,2
+           ,P.[INATIVO]
+           ,[LX_SITUACAO_SERVICO]
+           ,[LX_AMBIENTE]
+           ,[DATA_INICIO_UTLIZACAO]
+           ,[DATA_FINAL_UTILIZACAO]
+           ,1
+           ,[INDICA_AUTORIZA_SINCRONO]
+           ,[TEMPO_GUARDA]
+           ,[DATA_ENTRADA_CONTINGENCIA_AUTO]
+           ,[DATA_ENVIO_EMAIL]
+           ,[ERRO_ENVIO_EMAIL]
+           ,[DATA_CHECK_CONTINGENCIA]
+		    from [LX_MID].[MID_CADASTRO_PRODUTO] P 
+			join lx_mid.mid_cadastro c
+			on p.ID_CADASTRO = c.ID_CADASTRO
+			where ID_PRODUTO = '22'
+			and P.ID_CADASTRO not in (select ID_CADASTRO from lx_mid.[MID_CADASTRO_PRODUTO] where ID_PRODUTO = 2)
+		--	and ID_GPECON = '32107'
+
+commit
+*/
