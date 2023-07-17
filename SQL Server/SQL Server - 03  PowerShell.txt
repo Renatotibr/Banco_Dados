@@ -1,5 +1,5 @@
-$EmailFrom = "EquipeDBA@mg.senac.br"
-$EmailTo = "renato.barbosa@mg.senac.br"
+$EmailFrom = "xxxxxx@mg.xxxxx.br"
+$EmailTo = "xxxxxxxa@mg.xxxxxx.br"
 $Port = 25
 $Subject = "Test From PowerShell (Anonymous Auth, no SSL)"
 $Body = "Did this work?"
